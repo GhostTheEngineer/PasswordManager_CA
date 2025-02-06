@@ -9,16 +9,21 @@
  * This source code is licensed under the MIT License. For more details, see
  * the LICENSE file in the root directory of this project.
  *
- * Version: v1.0
+ * Version: v1.1.0
  * Author: Ghost
  * Created On: 1-28-2025
- * Last Modified: 1-29-2025
+ * Last Modified: 02-06-2025
  *****************************************************************************/
 
 #include "../include/custom_io.h"
 #include <fstream>
 
 #define ENCRYPT_DELIM "|"
+
+void CustomIO::PrintToScreen(const char* msg, bool lineBreak) {
+    if (lineBreak) std::cout << msg << std::endl;
+    else std::cout << msg;
+}
 
 int CustomIO::GetNumericInput(int maxAttempts) {
 
@@ -58,6 +63,10 @@ void CustomIO::GetInput(std::string& input) {
     std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n'); // clear remaining buffer to avoid issues on later input captures
 }
 
+void CustomIO::GetInputLine(std::string& input) {
+    std::getline(std::cin, input);
+}
+
 std::string CustomIO::GetExecutablePath() {
     return std::filesystem::current_path().string();
 }
@@ -81,9 +90,10 @@ bool CustomIO::SaveToFile(const std::unordered_map<std::string, std::string>& pa
     return false;
 }
 
-void CustomIO::LoadFromFile(std::filesystem::path& savePath, IEncryption*& encrypt, std::unordered_map<std::string, std::string>& passwords) {
+std::unordered_map<std::string, std::string> CustomIO::LoadFromFile(std::filesystem::path& savePath, IEncryption*& encrypt) {
     if (savePath.extension() != FIO_EXT) savePath.replace_extension(FIO_EXT); // update ext if not correct
 
+    std::unordered_map<std::string, std::string> passwords({});
     std::ifstream file(savePath, std::ios::binary);
 
     if (file.is_open()) {
@@ -98,5 +108,5 @@ void CustomIO::LoadFromFile(std::filesystem::path& savePath, IEncryption*& encry
         }
         file.close();
     }
-
+    return passwords;
 }

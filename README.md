@@ -36,6 +36,21 @@ Passwords are stored in a **binary file (`passwords.pwdb`)** inside the same dir
 │── run.sh                     # (Assumed) Shell script for Mac/Linux
 ```
 
+## Requirements
+
+To build and run this project, ensure you have the following dependencies installed:
+
+### **Build System**
+- **CMake** (version 3.10 or higher)  
+  - Download: [https://cmake.org/download/](https://cmake.org/download/)
+
+### **Compilers**
+- **GCC** (MinGW for Windows) or **Clang**
+  - Windows: Install via [MSYS2](https://www.msys2.org/)
+  - Linux/macOS: Install via package manager (`apt`, `brew`, `dnf`, etc.)
+- **Microsoft Visual C++ (MSVC)**
+  - Install via **Visual Studio** with the "Desktop Development with C++" workload.
+
 ## 🏗️ Compilation & Running
 
 ### 🔹 Windows

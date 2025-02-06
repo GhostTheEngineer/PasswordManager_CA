@@ -9,10 +9,10 @@
  * This source code is licensed under the MIT License. For more details, see
  * the LICENSE file in the root directory of this project.
  *
- * Version: v1.0
+ * Version: v1.1.0
  * Author: Ghost
  * Created On: 1-28-2025
- * Last Modified: 1-29-2025
+ * Last Modified: 02-06-2025
  *****************************************************************************/
 
 #pragma once
@@ -36,6 +36,19 @@
  */
 class CustomIO {
 public:
+
+    /**
+     * @brief Prints a message to the console.
+     * 
+     * This function outputs a message to `std::cout`. It provides an option 
+     * to either append a newline (`std::endl`) or keep the output on the 
+     * same line.
+     * 
+     * @param msg The message to print.
+     * @param lineBreak If `true`, adds a newline after the message. If `false`, 
+     *        the message remains on the same line.
+     */
+    static void PrintToScreen(const char* msg, bool lineBreak = false);
 
     /**
      * @brief Reads and validates a numeric input from the user.
@@ -63,6 +76,19 @@ public:
      * @param input string object reference to hold user input.
      */
     static void GetInput(std::string& input);
+
+    /**
+     * @brief Reads an entire line of user input, including spaces.
+     * 
+     * Unlike `GetInput()`, this function captures the **full input line**, 
+     * preserving spaces and special characters instead of stopping at the first whitespace.
+     * 
+     * @param input A reference to a `std::string` where user input will be stored.
+     * 
+     * @note This function uses `std::getline(std::cin, input)`, ensuring the entire line 
+     *       is read without being truncated by whitespace.
+     */
+    static void GetInputLine(std::string& input);
 
     /**
      * @brief Retrieves the path of the current working directory where the executable resides.
@@ -99,6 +125,6 @@ public:
      * @param encrypt A reference to the encryption instance used to decrypt data.
      * @param passwords A reference to the map where decrypted key-value pairs will be stored.
      */
-    static void LoadFromFile(std::filesystem::path& filename, IEncryption*& encrypt, std::unordered_map<std::string, std::string>& passwords);
+    static std::unordered_map<std::string, std::string> LoadFromFile(std::filesystem::path& filename, IEncryption*& encrypt);
 
 };

@@ -1,3 +1,6 @@
-/.vscode
+
 out
 ignore
+
+launch.json
+settings.json

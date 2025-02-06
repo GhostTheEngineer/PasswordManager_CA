@@ -9,20 +9,21 @@ if not "%1"=="Release" if not "%1"=="Debug" (
 set BUILD_TYPE=%1
 set BUILD_DIR=out/%BUILD_TYPE%
 
-:: Create directory and change to it
+:: Create build directory if it does not exist
 if not exist %BUILD_DIR% (
-    echo creating build directory..
+    echo Creating build directory..
     mkdir "%BUILD_DIR%"
 )
 
-:: change directory to build folder
+:: Change directory to build folder
 cd /d "%BUILD_DIR%"
 
-:: Compile based on flag
-if %BUILD_TYPE% == Debug (
-    echo compiling in debug mode..
-    g++ -DDEBUG=1 ../../src/*.cpp -std=c++17 -I../../include -o password_manager
-) else (
-    echo compiling in release mode..
-    g++ ../../src/*.cpp -std=c++17 -I../../include -o password_manager
+:: Run CMake
+if not exist CMakeCache.txt (
+    echo Configuring CMake...
+    cmake -DCMAKE_BUILD_TYPE=%BUILD_TYPE% ../..
 )
+
+:: Build the project
+echo Building in %BUILD_TYPE% mode...
+cmake --build . --config %BUILD_TYPE%
