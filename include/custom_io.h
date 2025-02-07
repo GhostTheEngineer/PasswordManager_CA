@@ -99,6 +99,7 @@ public:
 
     /**
      * @brief Constructs a full save path by appending the given filename to the executable's directory.
+     * This path adds the extension of #FIO_EXT
      * 
      * @param filename The name of the file to append to the directory path.
      * @return The full path to the file as a string.
@@ -112,7 +113,7 @@ public:
      * @param savePath The path to the file where data will be saved.
      * @param key The encryption key used to encrypt the data.
      */
-    static bool SaveToFile(const std::unordered_map<std::string, std::string>& passwords, std::filesystem::path& savePath, IEncryption*& encrypt);
+    static bool SaveToFile(const std::unordered_map<std::string, std::string>& passwords, const std::filesystem::path& savePath, const IEncryption& encrypt);
 
     /**
      * @brief Loads decrypted key-value pairs from a file into the provided map.
@@ -125,6 +126,6 @@ public:
      * @param encrypt A reference to the encryption instance used to decrypt data.
      * @param passwords A reference to the map where decrypted key-value pairs will be stored.
      */
-    static std::unordered_map<std::string, std::string> LoadFromFile(std::filesystem::path& filename, IEncryption*& encrypt);
+    static std::unordered_map<std::string, std::string> LoadFromFile(const std::filesystem::path& filename, const IEncryption& encrypt);
 
 };

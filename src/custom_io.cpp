@@ -72,16 +72,15 @@ std::string CustomIO::GetExecutablePath() {
 }
 
 std::filesystem::path CustomIO::GetSavePath(const std::string& filename) {
-    return (std::filesystem::path(GetExecutablePath()) / filename);
+    return (std::filesystem::path(GetExecutablePath()) / (filename + FIO_EXT));
 }
 
-bool CustomIO::SaveToFile(const std::unordered_map<std::string, std::string>& passwords, std::filesystem::path& savePath, IEncryption*& encrypt) {
-    if (savePath.extension() != FIO_EXT) savePath.replace_extension(FIO_EXT); // update ext if not correct
+bool CustomIO::SaveToFile(const std::unordered_map<std::string, std::string>& passwords, const std::filesystem::path& savePath, const IEncryption& encrypt) {
     
     std::ofstream file(savePath, std::ios::binary | std::ios::trunc);
     if (file.is_open()) {
         for (const auto& [app, pass] : passwords) {
-            file << encrypt->encrypt(app) << ENCRYPT_DELIM << encrypt->encrypt(pass) << "\n";
+            file << encrypt.encrypt(app) << ENCRYPT_DELIM << encrypt.encrypt(pass) << "\n";
         }
         file.close();
         return true;
@@ -90,8 +89,7 @@ bool CustomIO::SaveToFile(const std::unordered_map<std::string, std::string>& pa
     return false;
 }
 
-std::unordered_map<std::string, std::string> CustomIO::LoadFromFile(std::filesystem::path& savePath, IEncryption*& encrypt) {
-    if (savePath.extension() != FIO_EXT) savePath.replace_extension(FIO_EXT); // update ext if not correct
+std::unordered_map<std::string, std::string> CustomIO::LoadFromFile(const std::filesystem::path& savePath, const IEncryption& encrypt) {
 
     std::unordered_map<std::string, std::string> passwords({});
     std::ifstream file(savePath, std::ios::binary);
@@ -103,7 +101,7 @@ std::unordered_map<std::string, std::string> CustomIO::LoadFromFile(std::filesys
             if (delimiterPos != std::string::npos) {
                 std::string app = line.substr(0, delimiterPos);
                 std::string pass = line.substr(delimiterPos + 1);
-                passwords[encrypt->decrypt(app)] = encrypt->decrypt(pass);
+                passwords[encrypt.decrypt(app)] = encrypt.decrypt(pass);
             }
         }
         file.close();

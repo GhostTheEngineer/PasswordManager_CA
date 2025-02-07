@@ -59,17 +59,6 @@ private:
      */
     bool m_HasUpdated;
 
-    /**
-     * @brief Pointer to an encryption strategy.
-     * 
-     * This allows the `PasswordManager` to encrypt and decrypt passwords
-     * before saving or retrieving them. The actual encryption behavior is 
-     * determined by the `IEncryption` implementation (e.g., `HEXEncryption`).
-     * 
-     * @note The `PasswordManager` class is responsible for managing this pointer.
-     */
-    IEncryption* m_Encryption = nullptr;
-
 public:
     PasswordManager() = delete; // don't allow default constructor as the following constructors are required
 
@@ -79,7 +68,7 @@ public:
      * @param data Unordered map containing app-password pairs.
      * @param encryption Pointer to an encryption strategy implementing `IEncryption`.
      */
-    PasswordManager(std::unordered_map<std::string, std::string>&& data, IEncryption* encryption);
+    PasswordManager(std::unordered_map<std::string, std::string>&& data);
 
     /**
      * @brief Adds or updates a password for a given application.
@@ -113,6 +102,6 @@ public:
      * 
      * @note If no modifications were made, saving is skipped.
      */
-    bool CommitData(std::filesystem::path& filePath);
+    bool CommitData(std::filesystem::path& filePath, const IEncryption& encryption);
 
 };

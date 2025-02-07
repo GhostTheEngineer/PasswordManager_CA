@@ -40,21 +40,16 @@ void displayMenu() {
  3. Delete a password
  4. Exit
 )");
-//     std::cout << R"(Password Manager - Main Menu
-//  1. Add a password
-//  2. View passwords
-//  3. Delete a password
-//  4. Exit
-// )";
 }
 
 void runPasswordManager(const char* adminPassword) {
-    // LOCAL VARIABLES
+    
+    // STACK VARIABLES
     std::string input;
     int choice;
-    IEncryption* encrypt = new HEXEncryption(); // NOTE: If you decide on adding OpenSSL, create custom script and use Interface wrapped around library
-    std::filesystem::path savePath = CustomIO::GetSavePath("passwords"); // NOTE: path to save data to - change filename to whatever you like
-    PasswordManager manager(CustomIO::LoadFromFile(savePath, encrypt), encrypt);
+    HEXEncryption hexEncrypt; // NOTE: If you decide on adding OpenSSL, create custom script and use Interface wrapped around library then swap it here
+    std::filesystem::path savePath = CustomIO::GetSavePath("passwords"); // NOTE: path to save data - you may change filename to whatever you like
+    PasswordManager manager(CustomIO::LoadFromFile(savePath, hexEncrypt));
 
 #ifdef DEBUG // Encrypted Password Viewer 
     Logger::Info("***[DEBUG MODE]****************************");
@@ -78,7 +73,7 @@ void runPasswordManager(const char* adminPassword) {
     CustomIO::PrintToScreen("Enter master password: ");
     CustomIO::GetInput(input);
     if (input != adminPassword) {
-        CustomIO::PrintToScreen("Access denied!");
+        Logger::Error("Access denied!");
         system("pause");
         return;
     }
@@ -125,7 +120,7 @@ void runPasswordManager(const char* adminPassword) {
 
     } while (choice != 4);
 
-    if (!manager.CommitData(savePath)) { // attempt to commit data to file, if not successful, pause to display error
+    if (!manager.CommitData(savePath, hexEncrypt)) { // attempt to commit data to file, if not successful, pause to display error
         CustomTerminal::PrintAndClearBuffer(); // display messages in buffer
         system("pause"); 
     }

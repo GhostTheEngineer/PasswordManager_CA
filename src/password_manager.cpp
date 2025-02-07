@@ -24,8 +24,8 @@
 #include "custom_terminal.h"
 #include "custom_io.h"
 
-PasswordManager::PasswordManager(std::unordered_map<std::string, std::string>&& data, IEncryption* encryption) 
-    : m_HasUpdated(false), m_Encryption(encryption) {
+PasswordManager::PasswordManager(std::unordered_map<std::string, std::string>&& data) 
+    : m_HasUpdated(false) {
 
     m_DataMap = std::move(data); // transfer ownership of rvlaue to class member
 }
@@ -64,9 +64,9 @@ void PasswordManager::ViewPasswords() {
     CustomTerminal::AddMessageToBuffer("",1); // space
 }
 
-bool PasswordManager::CommitData(std::filesystem::path& filePath) {
+bool PasswordManager::CommitData(std::filesystem::path& filePath, const IEncryption& encryption) {
     if (m_HasUpdated) {
-        if (!CustomIO::SaveToFile(m_DataMap, filePath, m_Encryption)) {
+        if (!CustomIO::SaveToFile(m_DataMap, filePath, encryption)) {
             CustomTerminal::AddMessageToBuffer("There was a problem while attempting to save data to file.", 2);
         }
         else return true;
